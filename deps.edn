@@ -14,7 +14,7 @@
   :master {:override-deps {org.clojure/clojure {:mvn/version "1.10.0-master-SNAPSHOT"}}}
 
   ;; testing and debugging tools:
-  :test {:extra-paths ["test" "src/test/clojure"]
+  :test {:extra-paths ["test" "src/test/clj"]
          :extra-deps {org.clojure/test.check {:mvn/version "RELEASE"}}}
   ;; - see https://github.com/cognitect-labs/test-runner
   ;; - run your tests: clj -A:test:runner
@@ -45,9 +45,14 @@
              :main-opts ["-m" "depot.outdated.main"]}
 
   ;; REPL-related tools:
-  ;; - start an nREPL server on port 60606:
-  :nrepl {:extra-deps {nrepl {:mvn/version "0.4.5"}}
-          :main-opts ["-e" "(require,'[nrepl.server,:refer,[start-server]]),(start-server,:port,60606)"]}
+  ;; - start an nREPL server on port 60606 with:
+  ;;   *  refactoring middleware
+  ;;   *  cider-middleware
+  :nrepl {:extra-deps {nrepl {:mvn/version "0.4.5"}
+                       refactor-nrepl {:mvn/version "2.4.0"}
+                       cider/cider-nrepl {:mvn/version "0.18.0"}}
+          :main-opts ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware,refactor-nrepl.middleware/wrap-refactor]"]}
+                
   :nrepl/old {:extra-deps {org.clojure/tools.nrepl {:mvn/version "RELEASE"}}
               :main-opts ["-e" "(require,'[clojure.tools.nrepl.server,:refer,[start-server]]),(start-server,:port,60606)"]}
   ;; - start a Socket REPL on port 50505:
